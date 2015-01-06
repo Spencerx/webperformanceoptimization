@@ -9,6 +9,13 @@ Your challenge, if you wish to accept it (and we sure hope you will), is to opti
 
 2) REWIEW AND OPTIMIZATION PROCESS:
 
+These are the list of Web sites, books, forums, blog posts, github repositories etc, that I referred to or used in this submission:
+
+- “Web performance optimization” course, Udacity.
+- Piazza forum and discussions.
+- Den Odell’s Pro JavaScript Development book, page 103, as docummented here below, and chapters 3
+  4 and 15.
+
  I've applied the three recommended patterns:
 
  /#/
