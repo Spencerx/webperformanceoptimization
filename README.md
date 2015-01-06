@@ -1,71 +1,116 @@
 
-MASTER2: ESTA OPTIMIZACIÓN DE RENDERIZADO ES MEJOR QUE LA PLANTEADA EN MASTER 1. AQUÍ SE SUPRIME
-EL RECALCULADO DE CSS EN UPDATEPOSITION(); Y EL EVENTO SCROLL. LA LÍNEA DE TIEMPO ES LA SEGUNDA: 17.37
-
-
-
 ## Website Performance Optimization portfolio project
+
+1) DEFINITION OF THE PROJECT:
 
 Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
 
-To get started, check out the repository, inspect the code,
+/***************************************************************************************************/
 
-### Getting started
+2) REWIEW AND OPTIMIZATION PROCESS:
 
-Some useful tips to help you get started:
+ I've applied the three recommended patterns:
 
-1. Check out the repository
-1. To inspect the site on your phone, you can run a local server
+ /#/
+   A) Mimimize bytes (minimize, compress, cache):
 
-  ```bash
-  $> cd /path/to/your-project-folder
-  $> python -m SimpleHTTPServer 8080
-  ```
+ I've minified and compressed HTML, CSS and JS files using Grunt and Nodejs as a part of automated development workflow with these devDependencies: closure-compiler, htmlmin, imagemin and uglify. Nevertheless, the result of the images compression hasn't been as desired so I've used Adobe Fireworks for a medium-size compression. 
+ I don't have access to the .htaccess file on the server so I haven't been able to implement "Expires" and "Cache-Control: max-age" headers.
 
-1. Open a browser and visit localhost:8080
-1. Download and install [ngrok](https://ngrok.com/) to make your local server accessible remotely.
 
-  ``` bash
-  $> cd /path/to/your-project-folder
-  $> ngrok 8080
-  ```
+ /##/
+   B) Reduce critical resources (minimize use of render blocking resources):
 
-1. Copy the public URL ngrok gives you and try running it through PageSpeed Insights! [More on integrating ngrok, Grunt and PageSpeed.](http://www.jamescryer.com/2014/06/12/grunt-pagespeed-and-ngrok-locally-testing/)
+ b.1) I've deleted <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  which caused unnecessary render blocking as recommended by Pagespeed Insigths site and suggested
+  by Cameron Pittman in his comments to the "index.html", "project-2048.html", "project-mobile.html", "project-webperf.html".
 
-Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
+ b.2) I've used media queries on <link> to unblock rendering in print.css:'media="print"'.
 
-### Optimization Tips and Tricks
-* [Optimizing Performance](https://developers.google.com/web/fundamentals/performance/ "web performance")
-* [Analyzing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/analyzing-crp.html "analyzing crp")
-* [Optimizing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path.html "optimize the crp!")
-* [Avoiding Rendering Blocking CSS](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css.html "render blocking css")
-* [Optimizing JavaScript](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/adding-interactivity-with-javascript.html "javascript")
-* [Measuring with Navigation Timing](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/measure-crp.html "nav timing api"). We didn't cover the Navigation Timing API in the first two lessons but it's an incredibly useful tool for automated page profiling. I highly recommend reading.
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/eliminate-downloads.html">The fewer the downloads, the better</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer.html">Reduce the size of text</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization.html">Optimize images</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching.html">HTTP caching</a>
+ b.3) Inlined css: 
+   b.3.1) I've inlined "style.css" in "index.html", "project-2048.html", "project-mobile.html", "project-webperf.html" and "pizza.html".
+   b.3.2) The same optimization is done with "boostrap-grid.css" in "pizza.html".
 
-### Customization with Bootstrap
-The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are in `dist/css/portfolio.css` in the portfolio repo.
+ b.4) I've done some small changes in views/js/main.js to optimize the logical side of how the page is rendered, following the recommendations of Den Odell: Pro JavaScript Development, page 103, for handling "Rapid-Fire Events With Framing". The pursued target was to adjust the code in order to make the scroll event handler to store the scroll position in a variable and move "the computationally intensive code to a separate function that then fires on a less frecuent timer or interval" running the code with the values stored in that variable "rather than directly from the event handler". This is known as "event framing". This is how I've implemented this concept in the code:
 
-* <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
-* <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
+ /** Lines 502 to 522 of the original code:
+   */
 
-### Sample Portfolios
+ /** This function has a new index 1 and, as shown below, is going to be executed once every 300 ms
+   * on a setInterval function
+   */
 
-Feeling uninspired by the portfolio? Here's a list of cool portfolios I found after a few minutes of Googling.
+   function updatePositions1() {
 
-* <a href="http://www.reddit.com/r/webdev/comments/280qkr/would_anybody_like_to_post_their_portfolio_site/">A great discussion about portfolios on reddit</a>
-* <a href="http://ianlunn.co.uk/">http://ianlunn.co.uk/</a>
-* <a href="http://www.adhamdannaway.com/portfolio">http://www.adhamdannaway.com/portfolio</a>
-* <a href="http://www.timboelaars.nl/">http://www.timboelaars.nl/</a>
-* <a href="http://futoryan.prosite.com/">http://futoryan.prosite.com/</a>
-* <a href="http://playonpixels.prosite.com/21591/projects">http://playonpixels.prosite.com/21591/projects</a>
-* <a href="http://colintrenter.prosite.com/">http://colintrenter.prosite.com/</a>
-* <a href="http://calebmorris.prosite.com/">http://calebmorris.prosite.com/</a>
-* <a href="http://www.cullywright.com/">http://www.cullywright.com/</a>
-* <a href="http://yourjustlucky.com/">http://yourjustlucky.com/</a>
-* <a href="http://nicoledominguez.com/portfolio/">http://nicoledominguez.com/portfolio/</a>
-* <a href="http://www.roxannecook.com/">http://www.roxannecook.com/</a>
-* <a href="http://www.84colors.com/portfolio.html">http://www.84colors.com/portfolio.html</a>
+   frame++;
+   window.performance.mark("mark_start_frame");
+
+   var items = document.querySelectorAll('.mover');
+
+   for (var i = 0; i < items.length; i++) {
+        var phase = Math.sin((scrollTopPosition / 1250) + (i % 5));
+        items[i].style.left = items[i].basicLeft + 100 * phase + 'px'; 
+    }
+
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+   }
+ }
+
+/** Connects the event with the handler function updatePosition2
+  */
+    window.addEventListener('scroll', updatePositions2);
+
+/** Creates an event handler function that does nothing but to store the current scroll position and
+  * perform an average measure between the last 10 frames
+  */
+
+    function updatePositions2() {
+
+ scrollTopPosition= body.scrollTop;
+ scrollLeftPosition= body.scrollLeft;
+   
+  frame++;
+
+  window.performance.mark("mark_start_frame");
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+   var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+
+
+   }
+ }
+
+/** Execute the updatePositions1 function, which caused the performance problems, once every 300 ms  
+  *rather than every time the scroll event fires, improving application performance
+  */
+
+ window.setInterval(updatePositions1, 300);
+
+
+
+/###/
+  C) Shorten CRP length:
+
+  I've used async atrribute on the following JS files, which have dependencies with "index.html", "project-2048.html", "project-mobile.html", "project-webperf.html":
+
+ <script async src="//www.google-analytics.com/analytics.js"></script>
+ <script async src="js/perfmatters.js"></script>
+
+/***************************************************************************************************/
+
+ 3) REWIEW AND OPTIMIZATION PROCESS RESULTS:
+
+ All the files have passed the Pagespeed Insights site recommendations with a "speed" score of 90/100 or higher, and 100/100 score on "user experience" both on mobile and on desktop.
+
+
+
+
+
+
+
