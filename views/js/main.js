@@ -507,7 +507,7 @@ function updatePositions2() {
   }
 }
 
-window.setInterval(updatePositions1, 300);
+window.setInterval(updatePositions1, 25);
 
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
